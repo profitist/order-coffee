@@ -72,6 +72,19 @@ addButton.addEventListener('click', () => {
   updateDeleteButtons();
 });
 
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  modalOverlay.classList.add('active');
+});
+
+const closeModalBtn = document.querySelector('.close-modal-button');
+const modalOverlay = document.querySelector('.modal-overlay');
+
+closeModalBtn.addEventListener('click', function () {
+  modalOverlay.classList.remove('active');
+  location.reload();
+});
+
 // --- Пункт 7: textarea с живым превью и подсветкой ---
 
 const URGENT_PATTERN = /(срочно|побыстрее|быстрее|поскорее|скорее|очень нужно)/gi;
