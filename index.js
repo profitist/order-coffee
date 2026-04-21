@@ -38,7 +38,6 @@ function addDeleteButton(fieldset) {
   fieldset.appendChild(btn);
 }
 
-// Init first fieldset
 const firstFieldset = document.querySelector('.beverage');
 firstFieldset.querySelectorAll('input[type="radio"]').forEach(radio => {
   radio.name = 'milk-1';
@@ -61,10 +60,8 @@ addButton.addEventListener('click', () => {
     cb.checked = false;
   });
 
-  // Re-attach delete button listener (cloneNode doesn't copy listeners)
   newFieldset.querySelector('.delete-button').addEventListener('click', onDeleteClick);
 
-  // Reset wishes textarea and preview
   newFieldset.querySelector('.wishes-input').value = '';
   newFieldset.querySelector('.wishes-preview').innerHTML = '';
 
