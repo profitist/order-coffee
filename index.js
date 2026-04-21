@@ -38,28 +38,6 @@ function addDeleteButton(fieldset) {
   fieldset.appendChild(btn);
 }
 
-function getDrinksStringForModal() {
-  const count = getBeverageCount();
-
-  const lastDigit = count % 10;
-  const lastTwoDigits = count % 100;
-
-  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
-    return `${count} напитков`;
-  }
-
-  switch (lastDigit) {
-    case 1:
-      return `${count} напиток`;
-    case 2:
-    case 3:
-    case 4:
-      return `${count} напитка`;
-    default:
-      return `${count} напитков`;
-  }
-}
-
 // Init first fieldset
 const firstFieldset = document.querySelector('.beverage');
 firstFieldset.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -94,13 +72,51 @@ addButton.addEventListener('click', () => {
   updateDeleteButtons();
 });
 
+
+const MILK_LABELS = {
+  usual: 'обычное',
+  'no-fat': 'обезжиренное',
+  soy: 'соевое',
+  coconut: 'кокосовое',
+};
+
+const OPTIONS_LABELS = {
+  'whipped cream': 'взбитые сливки',
+  marshmallow: 'зефирки',
+  chocolate: 'шоколад',
+  cinnamon: 'корица',
+};
+
+function collectOrderRows() {
+  return Array.from(document.querySelectorAll('.beverage')).map(fieldset => {
+    const select = fieldset.querySelector('select');
+    const drink = select.options[select.selectedIndex].text;
+    const milkRadio = fieldset.querySelector('input[type="radio"]:checked');
+    const milk = milkRadio ? (MILK_LABELS[milkRadio.value] ?? '') : '';
+    const extras = Array.from(fieldset.querySelectorAll('input[type="checkbox"]:checked'))
+      .map(cb => OPTIONS_LABELS[cb.value] ?? cb.value)
+      .join(', ');
+    return { drink, milk, extras };
+  });
+}
+
+function fillOrderTable() {
+  const tbody = document.querySelector('.order-table-body');
+  tbody.innerHTML = '';
+  collectOrderRows().forEach(({ drink, milk, extras }) => {
+    const tr = document.createElement('tr');
+    ['drink', 'milk', 'extras'].forEach(key => {
+      const td = document.createElement('td');
+      td.textContent = { drink, milk, extras }[key];
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const modalWindow = document.querySelector('.modal-window');
-
-  const drinksCountElement = document.createElement('p');
-  drinksCountElement.textContent = `Вы заказали ${getDrinksStringForModal()}.`;
-  modalWindow.appendChild(drinksCountElement);
+  fillOrderTable();
   modalOverlay.classList.add('active');
 });
 
@@ -111,6 +127,8 @@ closeModalBtn.addEventListener('click', function () {
   modalOverlay.classList.remove('active');
   location.reload();
 });
+
+// --- Пункт 7: textarea с живым превью и подсветкой ---
 
 const URGENT_PATTERN = /(срочно|побыстрее|быстрее|поскорее|скорее|очень нужно)/gi;
 
