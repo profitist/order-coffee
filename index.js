@@ -38,6 +38,28 @@ function addDeleteButton(fieldset) {
   fieldset.appendChild(btn);
 }
 
+function getDrinksStringForModal() {
+  const count = getBeverageCount();
+
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return `${count} напитков`;
+  }
+
+  switch (lastDigit) {
+    case 1:
+      return `${count} напиток`;
+    case 2:
+    case 3:
+    case 4:
+      return `${count} напитка`;
+    default:
+      return `${count} напитков`;
+  }
+}
+
 // Init first fieldset
 const firstFieldset = document.querySelector('.beverage');
 firstFieldset.querySelectorAll('input[type="radio"]').forEach(radio => {
@@ -70,6 +92,9 @@ addButton.addEventListener('click', () => {
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
+  const drinksCountElement = document.createElement('p');
+  drinksCountElement.textContent = `Вы заказали ${getDrinksStringForModal()}.`;
+  modalWindow.appendChild(drinksCountElement);
   modalOverlay.classList.add('active');
 });
 
@@ -80,3 +105,5 @@ closeModalBtn.addEventListener('click', function () {
   modalOverlay.classList.remove('active');
   location.reload();
 });
+
+const modalWindow = document.querySelector('.modal-window');
