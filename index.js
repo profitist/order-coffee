@@ -72,8 +72,51 @@ addButton.addEventListener('click', () => {
   updateDeleteButtons();
 });
 
+
+const MILK_LABELS = {
+  usual: 'обычное',
+  'no-fat': 'обезжиренное',
+  soy: 'соевое',
+  coconut: 'кокосовое',
+};
+
+const OPTIONS_LABELS = {
+  'whipped cream': 'взбитые сливки',
+  marshmallow: 'зефирки',
+  chocolate: 'шоколад',
+  cinnamon: 'корица',
+};
+
+function collectOrderRows() {
+  return Array.from(document.querySelectorAll('.beverage')).map(fieldset => {
+    const select = fieldset.querySelector('select');
+    const drink = select.options[select.selectedIndex].text;
+    const milkRadio = fieldset.querySelector('input[type="radio"]:checked');
+    const milk = milkRadio ? (MILK_LABELS[milkRadio.value] ?? '') : '';
+    const extras = Array.from(fieldset.querySelectorAll('input[type="checkbox"]:checked'))
+      .map(cb => OPTIONS_LABELS[cb.value] ?? cb.value)
+      .join(', ');
+    return { drink, milk, extras };
+  });
+}
+
+function fillOrderTable() {
+  const tbody = document.querySelector('.order-table-body');
+  tbody.innerHTML = '';
+  collectOrderRows().forEach(({ drink, milk, extras }) => {
+    const tr = document.createElement('tr');
+    ['drink', 'milk', 'extras'].forEach(key => {
+      const td = document.createElement('td');
+      td.textContent = { drink, milk, extras }[key];
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
+  fillOrderTable();
   modalOverlay.classList.add('active');
 });
 
