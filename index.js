@@ -127,3 +127,5 @@ form.addEventListener('input', event => {
   const preview = event.target.closest('.wishes-field').querySelector('.wishes-preview');
   preview.innerHTML = highlightUrgent(event.target.value);
 });
+
+
