@@ -64,6 +64,28 @@ addButton.addEventListener('click', () => {
   // Re-attach delete button listener (cloneNode doesn't copy listeners)
   newFieldset.querySelector('.delete-button').addEventListener('click', onDeleteClick);
 
+  // Reset wishes textarea and preview
+  newFieldset.querySelector('.wishes-input').value = '';
+  newFieldset.querySelector('.wishes-preview').innerHTML = '';
+
   form.insertBefore(newFieldset, addButton.parentElement);
   updateDeleteButtons();
+});
+
+// --- Пункт 7: textarea с живым превью и подсветкой ---
+
+const URGENT_PATTERN = /(срочно|побыстрее|быстрее|поскорее|скорее|очень нужно)/gi;
+
+function highlightUrgent(text) {
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped.replace(URGENT_PATTERN, '<b>$1</b>');
+}
+
+form.addEventListener('input', event => {
+  if (!event.target.matches('.wishes-input')) return;
+  const preview = event.target.closest('.wishes-field').querySelector('.wishes-preview');
+  preview.innerHTML = highlightUrgent(event.target.value);
 });
