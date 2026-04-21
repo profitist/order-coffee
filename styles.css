@@ -68,6 +68,32 @@
     border-radius: 5px;
 }
 
+.wishes-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.wishes-label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.wishes-input {
+    resize: vertical;
+    font-size: 14px;
+    padding: 5px;
+    width: 220px;
+}
+
+.wishes-preview {
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 300px;
+    word-break: break-word;
+}
+
 .modal-overlay {
     position: fixed;
     inset: 0;
